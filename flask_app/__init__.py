@@ -8,6 +8,7 @@ from flask_login import (
     logout_user,
     login_required,
 )
+from flask_mail import Mail, Message
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 

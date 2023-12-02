@@ -36,7 +36,7 @@
 {# Reviews #}
 <div class="row">
     <div class="col-md-12">
-      <h2> Timeline <small class="float-right">{{ user_posts|length }} posts</small></h2>
+      <h2> Moments <small class="float-right">{{ user_posts|length }} posts</small></h2>
       <ul class="media-list">
         {% for review in user_posts %}
         <li class="media review-item">
@@ -55,11 +55,13 @@
 
             <p>{{ review.likes|length }} Likes</p>
 
-            <form method="POST" action="{{ url_for('movies.user_detail', username=review.commenter.username) }}">
-                {{ like_post_form.hidden_tag() }}
-                {{ like_post_form.review_id(value=review.id) }}
-                {{ like_post_form.submit_like() }}
-            </form>
+            {% if current_user.is_authenticated %}
+                <form method="POST" action="{{ url_for('movies.user_detail', username=review.commenter.username) }}">
+                    {{ like_post_form.hidden_tag() }}
+                    {{ like_post_form.review_id(value=review.id) }}
+                    {{ like_post_form.submit_like() }}
+                </form>
+            {% endif %}
             
           </div>
         </li>

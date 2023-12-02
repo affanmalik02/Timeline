@@ -62,10 +62,19 @@ def index():
         like_post_form=like_post_form,
     )
 
+@movies.route("/search-results2/<query>", methods=["GET"])
+def query_results2(query):
+    try:
+        results = movie_client.search(query)
+    except ValueError as e:
+        return render_template("query.html", error_msg=str(e))
+
+    return render_template("query.html", results=results)
+
 @movies.route("/search-results/<query>", methods=["GET"])
 def query_results(query):
     try:
-        results = movie_client.search(query)
+        results = User.objects(username=query)
     except ValueError as e:
         return render_template("query.html", error_msg=str(e))
 

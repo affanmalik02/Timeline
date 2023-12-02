@@ -111,16 +111,4 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col">
-        {# Link to see all of the current user's posts. #}
-        <br><br>
-        <h4>
-            <a href="{{url_for('movies.user_detail', username=current_user.username)}}">
-                {{user.username}}'s Timeline
-            </a>
-        </h4>
-    </div>
-</div>
-
 {% endblock %}

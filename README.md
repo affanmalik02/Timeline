@@ -223,3 +223,31 @@ is used by `Flask-Login` in order to retrieve the current user object.
    - `date`: required (can be saved as a string instead of a datetime)
    - `imdb_id`: required with length 9
    - `movie_title`: required with minimum length 1 and maximum length 100
+
+### Lexicon
+
+Creating a unique lexicon for your social media site, "Timeline," can help establish a distinctive brand identity and enhance user engagement. Here are some suggestions for various elements of your site:
+
+Posts: Since your platform is named "Timeline," you could call individual posts "Moments". This term encapsulates the idea of capturing a specific point in time, which aligns well with the theme of your site.
+
+User Profiles: Refer to user profiles as "Chronicles". This term suggests a detailed and continuous account, much like a personal history, which fits the concept of a timeline.
+
+Like: Instead of "likes," you could use "Echoes". This term can symbolize the reverberation or impact a post has on the community, similar to how sound echoes resonate.
+
+Share: Instead of "share," use "Spread". This suggests the action of spreading a moment through the timelines of others.
+
+Followers: Call them "Timekeepers". This term fits the temporal theme and gives a sense of people who keep track of others' timelines.
+
+Messaging/DMs: Refer to these as "Telegrams". This harkens back to older forms of communication and gives a nostalgic touch to the action of sending direct messages.
+
+Notifications: Call these "Tidings". It’s a term that traditionally means news or information and is a nice, less-common term that fits the historical or temporal theme.
+
+Trending Topics: Call them "Eras". This term represents significant periods in history, aligning well with the idea of trending or notable events on your platform.
+
+Story Feature: Name this feature "Epic". An epic is a long narrative poem, which could metaphorically represent a user's collection of short, personal stories.
+
+Groups/Communities: Refer to them as "Guilds". Historically, a guild was an association of craftsmen or merchants, which could parallel the idea of a group with common interests.
+
+Live Streaming: Name this feature "Currents". This can symbolize the live, flowing nature of this kind of content, like a river current that's always moving and changing.
+
+Polls/Surveys: Call them "Censuses". In keeping with the historical theme, a census is a systematic collection of data about a population.

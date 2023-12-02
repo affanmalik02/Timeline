@@ -4,9 +4,25 @@ import base64
 from io import BytesIO
 from .. import bcrypt
 from werkzeug.utils import secure_filename
-from ..forms import RegistrationForm, LoginForm, UpdateUsernameForm, UpdateProfileForm, UpdateProfilePicForm
+from ..forms import RegistrationForm, LoginForm, UpdateUsernameForm, UpdateProfileForm, UpdateProfilePicForm, SearchForm
 from ..models import User
 import base64,io
+
+from flask import Flask
+from flask_mail import Mail, Message
+
+app = Flask(__name__)
+
+# Configure Flask-Mail
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # e.g., 'smtp.gmail.com' for Gmail
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'email@gmail.com'
+app.config['MAIL_PASSWORD'] = 'password'
+app.config['MAIL_DEFAULT_SENDER'] = 'email@gmail.com'
+
+mail = Mail(app)
 
 users = Blueprint("users", __name__)
 
@@ -17,6 +33,10 @@ def get_b64_img(username):
     return image
 
 """ ************ User Management views ************ """
+
+@users.context_processor
+def context_processor():
+    return {'search_form': SearchForm()}
 
 # DONE
 # TODO: implement
@@ -31,6 +51,11 @@ def register():
             hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
             user = User(username=form.username.data, email=form.email.data, password=hashed_password)
             user.save()
+            
+            msg = Message("Welcome to Timeline", recipients=[form.email.data])
+            msg.body = "Thank you for signing up!"
+            mail.send(msg)
+            
             return redirect(url_for('users.login'))
     return render_template('register.html', form=form)
 
@@ -47,9 +72,9 @@ def login():
             user = User.objects(username=form.username.data).first()
             if user and bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return redirect(url_for('users.account', username=user.username)) #""", image=update_profile_pic_form.picture.data"""
+                return redirect(url_for('movies.index', username=user.username)) #""", image=update_profile_pic_form.picture.data"""
             else:
-                flash('Login failed. Try again', 'failure')
+                flash('Invalid username or password ', 'failure')
     return render_template("login.html", form=form)
 
 # DONE
