@@ -15,13 +15,14 @@ from flask_mail import Mail, Message
 app = Flask(__name__)
 
 # Configure Flask-Mail
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # e.g., 'smtp.gmail.com' for Gmail
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = 'email@gmail.com'
 app.config['MAIL_PASSWORD'] = 'password'
 app.config['MAIL_DEFAULT_SENDER'] = 'email@gmail.com'
+mail_enabled = False    #set to true to enable mail
 
 mail = Mail(app)
 
@@ -53,9 +54,10 @@ def register():
             user = User(username=form.username.data, email=form.email.data, password=hashed_password, joined_date=current_time())
             user.save()
             
-            #msg = Message("Welcome to Timeline", recipients=[form.email.data])
-            #msg.body = "Thank you for signing up!"
-            #mail.send(msg)
+            if mail_enabled:
+                msg = Message("Welcome to Timeline", recipients=[form.email.data])
+                msg.body = "Thank you for signing up!"
+                mail.send(msg)
             
             return redirect(url_for('users.login'))
     return render_template('register.html', form=form)
@@ -73,7 +75,7 @@ def login():
             user = User.objects(username=form.username.data).first()
             if user and bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return redirect(url_for('movies.index', username=user.username)) #""", image=update_profile_pic_form.picture.data"""
+                return redirect(url_for('movies.index', username=user.username))
             else:
                 flash('Invalid username or password ', 'failure')
     return render_template("login.html", form=form)
