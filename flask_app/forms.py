@@ -35,6 +35,10 @@ class LikePostForm(FlaskForm):
     review_id = HiddenField('Review ID')
     submit_like = SubmitField("Like")
 
+class DeletePostForm(FlaskForm):
+    review_id = HiddenField('Review ID')
+    submit_delete = SubmitField("Delete")
+
 class RegistrationForm(FlaskForm):
     username = StringField(
         "Username", validators=[InputRequired(), Length(min=1, max=40)]
@@ -88,7 +92,7 @@ class UpdateProfileForm(FlaskForm):
 # DONE
 # TODO: implement
 class UpdateProfilePicForm(FlaskForm):
-    picture = FileField('Photo', validators=[
+    picture = FileField('Profile Picture', validators=[
         FileRequired(),
         FileAllowed(['png', 'jpg'])
     ])

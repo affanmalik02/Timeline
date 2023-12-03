@@ -1,39 +1,49 @@
 {% extends "header.html" %}
+
 {% block content %}
-{% if error_msg %}
-    <p>{{ error_msg }}</p>
-{% endif %}
 
-<div class="container-fluid">
-    {% for result in results %}
-    <div class="media">
-
-        <div class="media-body">
-            <div class="row">
-                <div class="col">
-                    {# User's Profile Picture #}
-                    <br><br>
-                    <img class="propic" src="data:image/png;base64,{{result.profile_pic}}" alt="image" width="150" height="150">
-                </div>
-            </div>
-
-            <div class="profile">
-                <h3>{{ result.name }}</h3>
-                <a href="{{ url_for('movies.user_detail', username=result.username) }}">
-                    <strong>@{{ result.username }}</strong>
-                  </a>
-                {% if result.bio %}
-                    <p>{{ result.bio }}</p>
-                {% endif %}
-                
-                {% if result.location %}
-                    <p>{{ result.location }}</p>
-                {% endif %}
-            </div>
-            <br><br>
+    {% if error_msg %}
+        <p>{{ error_msg }}</p>
+    {% endif %}
+    <div class="Top">
+        <div class="row">
+            <div class="col-md-12">
+            <h2> Users <small class="float-right"></small></h2>
         </div>
     </div>
-    {% endfor %}
-</div>
+    <ul class="media-list">
+        {% for user in results %}
 
+            <li class="media review-item">
+
+                <div class="profile-container">
+                    <div class="profile-pic">
+                        <img class="propic" src="data:image/png;base64,{{get_b64_img(user.username)}}" alt="image">
+                    </div>
+                    
+                    <div class="col-md-8 profile-col">
+                        <div class="profile">
+                            
+                            <h4>{{ user.name }}</h4>
+                            <p style="margin-bottom: 25px">@{{ user.username }}</p>
+                            
+                            {% if user.bio %}
+                                <p style="margin-bottom: 25px">{{ user.bio }}</p>
+                            {% endif %}
+                            
+                            {% if user.location %}
+                                <small>{{ user.location }}</small>
+                            {% endif %}
+            
+                            <br><br>
+                            
+                            {% if user.joined_date %}
+                                <small>{{user.joined_date.split(' ')[0] }} {{user.joined_date.split(' ')[2] }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

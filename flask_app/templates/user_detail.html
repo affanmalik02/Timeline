@@ -10,28 +10,38 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col">
-        {# User's Profile Picture #}
-        <br><br>
-        <img class="propic" src="data:image/png;base64,{{image}}" alt="image" width="150" height="150">
+<style>
+    
+</style>
+
+<div class="profile-container">
+    <div class="profile-pic">
+        <!-- User's Profile Picture -->
+        <img class="propic" src="data:image/png;base64,{{image}}" alt="image">
+    </div>
+    <div class="col-md-8 profile-col">
+        {% block profile %}
+            <div class="profile">
+                <h4>{{ user.name }}</h4>
+                <p style="margin-bottom: 25px">@{{ user.username }}</p>
+                
+                {% if user.bio %}
+                    <p style="margin-bottom: 25px">{{ user.bio }}</p>
+                {% endif %}
+                
+                {% if user.location %}
+                    <small>{{ user.location }}</small>
+                {% endif %}
+
+                <br><br>
+                
+                {% if user.joined_date %}
+                    <small>{{user.joined_date.split(' ')[0] }} {{user.joined_date.split(' ')[2] }}</small>
+                {% endif %}
+            </div>
+        {% endblock %}
     </div>
 </div>
-
-{% block profile %}
-    <div class="profile">
-        <h3>{{ user.name }}</h3>
-        <h5>@{{ user.username }}</h5>
-        {% if user.bio %}
-            <p>{{ user.bio }}</p>
-        {% endif %}
-        
-        {% if user.location %}
-            <p>{{ user.location }}</p>
-        {% endif %}
-    </div>
-    <br><br>
-{% endblock %}
 
 {# Reviews #}
 <div class="row">
@@ -39,32 +49,42 @@
       <h2> Moments <small class="float-right">{{ user_posts|length }} posts</small></h2>
       <ul class="media-list">
         {% for review in user_posts %}
-        <li class="media review-item">
-          <img class="mr-3 comment-pic" src="data:image/png;base64,{{review.image}}" alt="pp">
-          <div class="media-body">
-            <span class="float-right">
-              <small>{{ review.date }}</small>
-            </span>
-            <span style="font-weight: bold;">{{ review.commenter.name }}</span>
-            <a href="{{ url_for('movies.user_detail', username=review.commenter.username) }}">
-              <strong>@{{ review.commenter.username }}</strong>
-            </a>
-            <p>
-              {{ review.content }}
-            </p>
+            <li class="media review-item">
+            <img class="mr-3 comment-pic" src="data:image/png;base64,{{review.image}}" alt="pp">
+            <div class="media-body">
+                <span class="float-right">
+                    <small>{{ review.date }}</small>
+                </span>
+                
+                <span style="font-weight: bold; ">{{ review.commenter.name }}</span>
+                <a href="{{ url_for('movies.user_detail', username=review.commenter.username) }}">
+                    <strong>@{{ review.commenter.username }}</strong>
+                </a>    
 
-            <p>{{ review.likes|length }} Likes</p>
+                <p style="padding-top: 5px; ">
+                    {{ review.content }}
+                </p>
 
-            {% if current_user.is_authenticated %}
-                <form method="POST" action="{{ url_for('movies.user_detail', username=review.commenter.username) }}">
-                    {{ like_post_form.hidden_tag() }}
-                    {{ like_post_form.review_id(value=review.id) }}
-                    {{ like_post_form.submit_like() }}
-                </form>
-            {% endif %}
-            
-          </div>
-        </li>
+                <span>{{ review.likes|length }} Likes</span>
+
+                {% if current_user.is_authenticated %}
+                    <form action="{{ url_for('movies.user_detail', username=review.commenter.username) }}" method="POST" class="d-inline">
+                        {{ like_post_form.csrf_token }}
+                        {{ like_post_form.review_id(value=review.id) }}
+                        <input type="submit" name="action" value="Like">
+                    </form>
+                {% endif %}
+
+                {% if current_user.is_authenticated and review.commenter.username == current_user.username %}
+                    <form action="{{ url_for('movies.user_detail', username=review.commenter.username) }}" method="POST" class="d-inline">
+                        {{ delete_post_form.csrf_token }}
+                        {{ delete_post_form.review_id(value=review.id) }}
+                        <input type="submit" name="action" value="Delete">
+                    </form>
+                {% endif %}
+                
+            </div>
+            </li>
         {% endfor %}
       </ul>
     </div>

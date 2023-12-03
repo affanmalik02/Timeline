@@ -9,16 +9,59 @@ movie {
 
 .media-list {
     border-top: 1px dashed rgb(150, 150, 150);
+    line-height: 1;
+}
+
+.Top {
+    margin-top: 50px;
+}
+
+.profile {
+    line-height: .70;
+    margin-top: 15;
+}
+
+.profile h4 {
+    margin-top: 0;
+    margin-bottom: 5;
+}
+
+.profile p {
+    margin-top: 0;
+    margin-bottom: 10;
 }
 
 .review-item {
+    padding-top: 15px;
     border-bottom: 1px dashed #a5a5a5;
-}
-
-.propic {
-    max-width: 50%;
+    padding-bottom: 15px;
 }
 
 .comment-pic {
-    max-width: 64px;
+    max-width: 75px;
+}
+
+.page-header {
+    margin-top: 25px;
+}
+
+.profile-container {
+    display: flex;
+    align-items: center;
+}
+
+.profile-pic {
+    padding-top: 50px;
+    padding-bottom: 25px;
+    flex: 0 0 auto; /* This ensures that the picture does not stretch */
+    padding-right: 10px; /* Adjust as needed */
+}
+
+.profile-col {
+    flex: 1; /* This allows the column to fill the remaining space */
+}
+
+.propic {
+    width: 150px;
+    height: 150px;
 }

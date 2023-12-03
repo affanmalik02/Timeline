@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from ..forms import RegistrationForm, LoginForm, UpdateUsernameForm, UpdateProfileForm, UpdateProfilePicForm, SearchForm
 from ..models import User
 import base64,io
+from ..utils import current_time
 
 from flask import Flask
 from flask_mail import Mail, Message
@@ -49,12 +50,12 @@ def register():
     if request.method == 'POST':
         if form.validate_on_submit():
             hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-            user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+            user = User(username=form.username.data, email=form.email.data, password=hashed_password, joined_date=current_time())
             user.save()
             
-            msg = Message("Welcome to Timeline", recipients=[form.email.data])
-            msg.body = "Thank you for signing up!"
-            mail.send(msg)
+            #msg = Message("Welcome to Timeline", recipients=[form.email.data])
+            #msg.body = "Thank you for signing up!"
+            #mail.send(msg)
             
             return redirect(url_for('users.login'))
     return render_template('register.html', form=form)

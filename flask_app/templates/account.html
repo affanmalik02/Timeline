@@ -1,112 +1,112 @@
 {% extends "header.html" %}
 {% block content %}
 
-<div class="row">
-    {% if image %}
-    <div class="col">
-        {# Profile picture #}
-        <br><br>
-        <img class="propic" src="data:image/png;base64,{{image}}" alt="image" width="150" height="150">        
+<div class="profile-container">
+    <div class="profile-pic">
+        <!-- User's Profile Picture -->
+        <img class="propic" src="data:image/png;base64,{{image}}" alt="image">
     </div>
-    {% endif %}    
-</div>
+    <div class="col-md-8 profile-col">
+        {% block profile %}
+            <div class="profile">
+                <h4>{{ user.name }}</h4>
+                <p style="margin-bottom: 25px">@{{ user.username }}</p>
+                
+                {% if user.bio %}
+                    <p style="margin-bottom: 25px">{{ user.bio }}</p>
+                {% endif %}
+                
+                {% if user.location %}
+                    <small>{{ user.location }}</small>
+                {% endif %}
 
-{% block profile %}
-    <div class="profile">
-        <h3>{{ user.name }}</h3>
-        <h5>@{{ user.username }}</h5>
-        {% if user.bio %}
-            <p>{{ user.bio }}</p>
-        {% endif %}
-        
-        {% if user.location %}
-            <p>{{ user.location }}</p>
-        {% endif %}
+                <br><br>
+                
+                {% if user.joined_date %}
+                    <small>{{user.joined_date.split(' ')[0] }} {{user.joined_date.split(' ')[2] }}</small>
+                {% endif %}
+            </div>
+        {% endblock %}
     </div>
-    <br><br>
-{% endblock %}
+</div>
 
 <div class="row">
     <div class="col-md-12">
         <h2> Edit Profile </h2>
         <ul class="media-list">
-            <h5>
-                Update Username
-            </h5>
+            <li class="media review-item">
+                <form method="POST" action="">
+                    {{ update_username_form.csrf_token }}
+                    <div class="form-group">
+                        {{ update_username_form.username.label }}
+                        {{ update_username_form.username(class="form-control") }}
+                        {% if update_username_form.username.errors %}
+                        <div class="alert alert-warning" role="alert">
+                            {% for error in update_username_form.username.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {{ update_username_form.submit_username() }}
+                </form>
+            </li>
             
-            <form method="POST" action="">
-                {{ update_username_form.csrf_token }}
-                <div class="form-group">
-                    {{ update_username_form.username.label }}
-                    {{ update_username_form.username(class="form-control") }}
-                    {% if update_username_form.username.errors %}
-                    <div class="alert alert-warning" role="alert">
-                        {% for error in update_username_form.username.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-                {{ update_username_form.submit_username() }}
-            </form>
-        
-            <h5>
-                Update Profile
-            </h5>
-            <form method="POST" action="">
-                {{ update_profile_form.csrf_token }}
-                <div class="form-group">
-                    {{ update_profile_form.name.label }}
-                    {{ update_profile_form.name(class="form-control") }}
-                    {% if update_profile_form.name.errors %}
-                    <div class="alert alert-warning" role="alert">
-                        {% for error in update_profile_form.name.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    
-                    {{ update_profile_form.bio.label }}
-                    {{ update_profile_form.bio(class="form-control") }}
-                    {% if update_profile_form.bio.errors %}
-                    <div class="alert alert-warning" role="alert">
-                        {% for error in update_profile_form.bio.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
+            <li class="media review-item">
+                <form method="POST" action="">
+                    {{ update_profile_form.csrf_token }}
+                    <div class="form-group">
+                        {{ update_profile_form.name.label }}
+                        {{ update_profile_form.name(class="form-control") }}
+                        {% if update_profile_form.name.errors %}
+                        <div class="alert alert-warning" role="alert">
+                            {% for error in update_profile_form.name.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        {{ update_profile_form.bio.label }}
+                        {{ update_profile_form.bio(class="form-control") }}
+                        {% if update_profile_form.bio.errors %}
+                        <div class="alert alert-warning" role="alert">
+                            {% for error in update_profile_form.bio.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
 
-                    {{ update_profile_form.location.label }}
-                    {{ update_profile_form.location(class="form-control") }}
-                    {% if update_profile_form.location.errors %}
-                    <div class="alert alert-warning" role="alert">
-                        {% for error in update_profile_form.location.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
+                        {{ update_profile_form.location.label }}
+                        {{ update_profile_form.location(class="form-control") }}
+                        {% if update_profile_form.location.errors %}
+                        <div class="alert alert-warning" role="alert">
+                            {% for error in update_profile_form.location.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
-                </div>
-                {{ update_profile_form.submit_profile() }}
-            </form>
+                    {{ update_profile_form.submit_profile() }}
+                </form>
+            </li>
 
-            <h5>
-                Update Profile Picture
-            </h5>
-            <form method="POST" action="" enctype="multipart/form-data">
-                {{ update_profile_picture_form.csrf_token }}
-                <div class="form-group">
-                    {{ update_profile_picture_form.picture.label }}
-                    {{ update_profile_picture_form.picture(class="form-control") }}
-                    {% if update_profile_picture_form.picture.errors %}
-                    <div class="alert alert-warning" role="alert">
-                        {% for error in update_profile_picture_form.picture.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
+            <li class="media review-item">
+                <form method="POST" action="" enctype="multipart/form-data">
+                    {{ update_profile_picture_form.csrf_token }}
+                    <div class="form-group">
+                        {{ update_profile_picture_form.picture.label }}
+                        {{ update_profile_picture_form.picture(class="form-control") }}
+                        {% if update_profile_picture_form.picture.errors %}
+                        <div class="alert alert-warning" role="alert">
+                            {% for error in update_profile_picture_form.picture.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
-                </div>
-                {{ update_profile_picture_form.submit_picture() }}
-            </form>
+                    {{ update_profile_picture_form.submit_picture() }}
+                </form>
+            </li>
         </ul>
     </div>
 </div>

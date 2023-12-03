@@ -11,8 +11,6 @@ from flask_login import (
 from flask_mail import Mail, Message
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
-
-
 # stdlib
 from datetime import datetime
 import os

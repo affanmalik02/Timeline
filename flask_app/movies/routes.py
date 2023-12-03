@@ -6,7 +6,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 from .. import movie_client
 from ..forms import MovieReviewForm, SearchForm
 from ..forms import RegistrationForm, LoginForm, UpdateUsernameForm, UpdateProfilePicForm
-from ..forms import LikePostForm
+from ..forms import LikePostForm, DeletePostForm
 from ..models import User, Review
 from ..utils import current_time
 from .. import bcrypt
@@ -25,11 +25,16 @@ def get_b64_img(username):
 def context_processor():
     return {'search_form': SearchForm()}
 
+@movies.context_processor
+def utility_processor():
+    return dict(get_b64_img=get_b64_img)
+
 @movies.route("/", methods=["GET", "POST"])
 def index():
     search_form = SearchForm()
     post_form = MovieReviewForm()
     like_post_form = LikePostForm()
+    delete_post_form = DeletePostForm()
 
     if search_form.validate_on_submit():
         return redirect(url_for("movies.query_results", query=search_form.search_query.data))
@@ -39,7 +44,7 @@ def index():
         img = get_b64_img(user.username)
 
         review = Review(
-            commenter=current_user._get_current_object(),
+            commenter=user,
             content=post_form.text.data,
             date=current_time(),
             imdb_id="Feed",
@@ -49,27 +54,38 @@ def index():
         )
 
         review.save()
+        return redirect(url_for("movies.index"))
 
-        return redirect(request.path)
+    if request.method == "POST":
+        action = request.form.get('action')
+        review_id = request.form.get('review_id')
+
+        if action == 'Like' and like_post_form.validate():
+            review = Review.objects(id=review_id).first()
+            if review:
+                current_user_username = current_user.get_id()
+                if current_user_username in review.likes:
+                    review.likes.remove(current_user_username)
+                else:
+                    review.likes.append(current_user_username)
+                review.save()
+        elif action == 'Delete' and delete_post_form.validate():
+            review = Review.objects(id=review_id).first()
+            if review and review.commenter.id == current_user.id:
+                review.delete()
+
+        return redirect(url_for("movies.index"))
 
     reviews = Review.objects(imdb_id="Feed")
-
+    
     return render_template(
         "index.html", 
         search_form=search_form,
         post_form=post_form,
         user_posts=reviews,
         like_post_form=like_post_form,
+        delete_post_form=delete_post_form,
     )
-
-@movies.route("/search-results2/<query>", methods=["GET"])
-def query_results2(query):
-    try:
-        results = movie_client.search(query)
-    except ValueError as e:
-        return render_template("query.html", error_msg=str(e))
-
-    return render_template("query.html", results=results)
 
 @movies.route("/search-results/<query>", methods=["GET"])
 def query_results(query):
@@ -79,7 +95,6 @@ def query_results(query):
         return render_template("query.html", error_msg=str(e))
 
     return render_template("query.html", results=results)
-
 
 @movies.route("/movies/<movie_id>", methods=["GET", "POST"])
 def movie_detail(movie_id):
@@ -117,44 +132,48 @@ def movie_detail(movie_id):
         reviews=reviews
     )
 
-#Done ?
 @movies.route("/user/<username>", methods=['GET', 'POST'])
 def user_detail(username):
-    #uncomment to get review image
-    #user = find first match in db
-    #img = get_b64_img(user.username) use their username for helper function
     user = User.objects(username=username).first()
 
     if user is None:
-        error = "User not found"
-        return render_template("user_detail.html", error=error, image=None)
+        return render_template("user_detail.html", error="User not found", image=None)
     
-    error = None
-
     user_posts = Review.objects(commenter=user.id)
     img = get_b64_img(user.username)
     
     like_post_form = LikePostForm()
+    delete_post_form = DeletePostForm()
     
     if request.method == 'POST':
-        if like_post_form.validate_on_submit():
-            review_id = like_post_form.review_id.data
+        action = request.form.get('action')
+        review_id = request.form.get('review_id')
+
+        if action == 'Like' and like_post_form.validate():
             review = Review.objects(id=review_id).first()
             if review:
-                if current_user.id in review.likes:
-                    review.likes.remove(current_user.id)
+                current_user_username = current_user.get_id()
+                if current_user_username in review.likes:
+                    review.likes.remove(current_user_username)
                 else:
-                    review.likes.append(current_user.id)
+                    review.likes.append(current_user_username)
                 review.save()
-            return redirect(url_for('user_detail', username=current_user.username))
+
+        elif action == 'Delete' and delete_post_form.validate():
+            review = Review.objects(id=review_id).first()
+            if review:
+                review.delete()
+
+        return redirect(url_for('movies.user_detail', username=username))
 
     return render_template(
         "user_detail.html", 
         user_posts=user_posts, 
         user=user, 
         image=img, 
-        error=error,
         like_post_form=like_post_form,
+        delete_post_form=delete_post_form,
+        joined_date=user.joined_date,
     )
 
 @movies.route("/custom_404")

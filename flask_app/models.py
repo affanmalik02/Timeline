@@ -29,7 +29,7 @@ class User(db.Document, UserMixin):
     password = db.StringField(required=True)
     
     joined_date = db.StringField()
-    profile_pic = db.ImageField()
+    profile_pic = db.ImageField()       #fix
     
     name = db.StringField(min_length=1, max_length=100)
     bio = db.StringField(min_length=1, max_length=500)
