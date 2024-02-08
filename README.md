@@ -1,4 +1,4 @@
-# Timeline: A Simple Social Media
+# Timeline: A Simple Social Journal
 
 <https://timeline.aspear.cs.umd.edu/>
 
@@ -28,9 +28,7 @@ is now in `client.py`.
 
 ### routes.py
 
-There are five new template files, corresponding to five
-new view functions
-in `routes.py`.
+template files:
 
 - `header.html`
 - `account.html`
@@ -41,7 +39,7 @@ in `routes.py`.
 - `index.html`
 - `query.html`
 
-Now we'll go into detail about each of the new view functions:
+### View functions:
 
 1. `account()`
 2. `login()`
@@ -50,8 +48,6 @@ Now we'll go into detail about each of the new view functions:
 5. `logout()`
 6. `movie_detail()`
 7. `custom_404()`
-
-### Profile pics
 
 ### forms.py
 
@@ -71,7 +67,7 @@ Now we'll go into detail about each of the new view functions:
 
 1. `User` - Should have these fields:
    - `username`: required and unique with minimum length 1 and maximum length 40 characters
-   - `email`: required and unique 
+   - `email`: required and unique
    - `password`: required (only store slow-hashed passwords!)
    - `joined_date`
    - `profile_pic`: optional
