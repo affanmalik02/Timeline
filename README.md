@@ -2,6 +2,8 @@
 
 <https://timeline.aspear.cs.umd.edu/>
 
+![alt text](image.png)
+
 ## Description
 
 Timeline is a social media site where anyone can share updates about their life
