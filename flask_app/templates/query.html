@@ -14,7 +14,7 @@
     <ul class="media-list">
         {% for user in results %}
 
-            <li class="media review-item">
+            <li class="media post-item">
 
                 <div class="profile-container">
                     <div class="profile-pic">
@@ -25,7 +25,11 @@
                         <div class="profile">
                             
                             <h4>{{ user.name }}</h4>
-                            <p style="margin-bottom: 25px">@{{ user.username }}</p>
+                            <a href="{{ url_for('posts.user_detail', username=user.username) }}" style="text-decoration: none;">
+                                <p style="margin-bottom: 25px;">
+                                    <strong>@{{ user.username }}</strong>
+                                </p>
+                            </a>
                             
                             {% if user.bio %}
                                 <p style="margin-bottom: 25px">{{ user.bio }}</p>
@@ -38,7 +42,7 @@
                             <br><br>
                             
                             {% if user.joined_date %}
-                                <small>{{user.joined_date.split(' ')[0] }} {{user.joined_date.split(' ')[2] }}</small>
+                                <small>Joined: {{ user.joined_date.strftime('%B %-d, %Y') }}</small>
                             {% endif %}
                         </div>
                     </div>

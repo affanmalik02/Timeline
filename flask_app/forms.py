@@ -4,6 +4,13 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from werkzeug.utils import secure_filename
 from wtforms import HiddenField, IntegerField, StringField, SubmitField, TextAreaField, PasswordField
+from mongoengine import Document, StringField, EmailField, DateField, ImageField
+from flask_login import UserMixin
+from datetime import datetime
+
+from wtforms import StringField, SubmitField, TextAreaField, DateField, SelectField, FileField
+from wtforms.validators import Length, Optional
+
 from wtforms.validators import (
     InputRequired,
     Length,
@@ -22,26 +29,26 @@ class SearchForm(FlaskForm):
     )
     submit = SubmitField("Search")
 
-class MovieReviewForm(FlaskForm):
+class SharePostForm(FlaskForm):
     text = TextAreaField(
         "Comment", 
-        validators=[InputRequired(), Length(min=5, max=500)],
+        validators=[InputRequired(), Length(min=1, max=250)],
         render_kw={"placeholder": "Add to the timeline..."}
     )
     submit = SubmitField("Share")
 
 #FIX
 class LikePostForm(FlaskForm):
-    review_id = HiddenField('Review ID')
+    post_id = HiddenField('Post ID')
     submit_like = SubmitField("Like")
 
 class DeletePostForm(FlaskForm):
-    review_id = HiddenField('Review ID')
+    post_id = HiddenField('Post ID')
     submit_delete = SubmitField("Delete")
 
 class RegistrationForm(FlaskForm):
     username = StringField(
-        "Username", validators=[InputRequired(), Length(min=1, max=40)]
+        "Username", validators=[InputRequired(), Length(min=1, max=20)]
     )
     email = StringField("Email", validators=[InputRequired(), Email()])
     password = PasswordField("Password", validators=[InputRequired()])
@@ -80,13 +87,16 @@ class UpdateUsernameForm(FlaskForm):
             raise ValidationError("Username is taken")
         
 class UpdateProfileForm(FlaskForm):
-    name = StringField('Name', validators=[Length(max=50, message="Enter a valid name")])
-    submit_name = SubmitField('Update Name')
-    bio = TextAreaField('Bio', validators=[Length(max=500, message="Bio must be less than 250 characters")])
-    submit_bio = SubmitField('Update Bio')
-    location = StringField('Location', validators=[Length(max=50, message="Enter a valid location")])
-    submit_location = SubmitField('Update Location') 
+    name = StringField('Name', validators=[Length(max=100), Optional()])
+    bio = TextAreaField('Bio', validators=[Length(max=500), Optional()])
+    location = StringField('Location', validators=[Length(max=50), Optional()])
     
+    # Optional fields
+    birthday = DateField('Birthday', format='%Y-%m-%d', validators=[Optional()])
+    
+    # Profile picture upload (optional)
+    profile_pic = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png'], 'Images only!'), Optional()])
+
     submit_profile = SubmitField('Update Profile')
 
 # DONE

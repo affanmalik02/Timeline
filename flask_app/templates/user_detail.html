@@ -23,62 +23,72 @@
         {% block profile %}
             <div class="profile">
                 <h4>{{ user.name }}</h4>
-                <p style="margin-bottom: 25px">@{{ user.username }}</p>
+                <a href="{{ url_for('posts.user_detail', username=user.username) }}" style="text-decoration: none;">
+                    <p style="margin-bottom: 25px;">
+                        <strong>@{{ user.username }}</strong>
+                    </p>
+                </a>
+                
                 
                 {% if user.bio %}
                     <p style="margin-bottom: 25px">{{ user.bio }}</p>
                 {% endif %}
-                
+
                 {% if user.location %}
                     <small>{{ user.location }}</small>
                 {% endif %}
 
                 <br><br>
+
+                {% if user.birthday %}
+                    <small>Since: {{ user.birthday.strftime('%B %-d, %Y') }}</small>
+                {% endif %}
                 
                 {% if user.joined_date %}
-                    <small>{{user.joined_date.split(' ')[0] }} {{user.joined_date.split(' ')[2] }}</small>
+                    
                 {% endif %}
+
             </div>
         {% endblock %}
     </div>
 </div>
 
-{# Reviews #}
+{# Posts #}
 <div class="row">
     <div class="col-md-12">
       <h2> Moments <small class="float-right">{{ user_posts|length }} posts</small></h2>
       <ul class="media-list">
-        {% for review in user_posts %}
-            <li class="media review-item">
-            <img class="mr-3 comment-pic" src="data:image/png;base64,{{review.image}}" alt="pp">
+        {% for post in user_posts | reverse %}
+            <li class="media post-item">
+                <img class="feedpropic" src="data:image/png;base64,{{post.image}}" alt="pp">
             <div class="media-body">
                 <span class="float-right">
-                    <small>{{ review.date }}</small>
+                    <small>{{ post.date.strftime('%B %d, %Y at %-I:%M %p') }}</small>
                 </span>
                 
-                <span style="font-weight: bold; ">{{ review.commenter.name }}</span>
-                <a href="{{ url_for('movies.user_detail', username=review.commenter.username) }}">
-                    <strong>@{{ review.commenter.username }}</strong>
+                <span style="font-weight: bold; ">{{ post.commenter.name }}</span>
+                <a href="{{ url_for('posts.user_detail', username=post.commenter.username) }}">
+                    <strong>@{{ post.commenter.username }}</strong>
                 </a>    
 
                 <p style="padding-top: 5px; ">
-                    {{ review.content }}
+                    {{ post.content }}
                 </p>
 
-                <span>{{ review.likes|length }} Likes</span>
+                <span>{{ post.likes|length }} Likes</span>
 
                 {% if current_user.is_authenticated %}
-                    <form action="{{ url_for('movies.user_detail', username=review.commenter.username) }}" method="POST" class="d-inline">
+                    <form action="{{ url_for('posts.user_detail', username=post.commenter.username) }}" method="POST" class="d-inline">
                         {{ like_post_form.csrf_token }}
-                        {{ like_post_form.review_id(value=review.id) }}
+                        {{ like_post_form.post_id(value=post.id) }}
                         <input type="submit" name="action" value="Like">
                     </form>
                 {% endif %}
 
-                {% if current_user.is_authenticated and review.commenter.username == current_user.username %}
-                    <form action="{{ url_for('movies.user_detail', username=review.commenter.username) }}" method="POST" class="d-inline">
+                {% if current_user.is_authenticated and post.commenter.username == current_user.username %}
+                    <form action="{{ url_for('posts.user_detail', username=post.commenter.username) }}" method="POST" class="d-inline">
                         {{ delete_post_form.csrf_token }}
-                        {{ delete_post_form.review_id(value=review.id) }}
+                        {{ delete_post_form.post_id(value=post.id) }}
                         <input type="submit" name="action" value="Delete">
                     </form>
                 {% endif %}

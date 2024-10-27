@@ -21,6 +21,11 @@ movie {
     margin-top: 15;
 }
 
+.media-body {
+    padding-left: 10px;
+    padding-top: 3px;
+}
+
 .profile h4 {
     margin-top: 0;
     margin-bottom: 5;
@@ -31,10 +36,14 @@ movie {
     margin-bottom: 10;
 }
 
-.review-item {
+.post-item {
     padding-top: 15px;
     border-bottom: 1px dashed #a5a5a5;
     padding-bottom: 15px;
+}
+
+.nav-item {
+    font-size: 14px;
 }
 
 .comment-pic {
@@ -64,4 +73,32 @@ movie {
 .propic {
     width: 150px;
     height: 150px;
+}
+
+.feedpropic {
+    width: 80px;
+    height: 80px;
+    flex: 0 0 auto;
+}
+
+/* Custom CSS for squared corners */
+.form-control, .btn-outline-success {
+    border-radius: 0;      /* Removes the rounded corners */
+    font-size: 14px;       /* Set font size to 14px */
+    height: 30px;          /* Keep the search bar thinner */
+    padding: 0 10px;       /* Horizontal padding for better appearance */
+}
+
+/* Add padding to the top to create a larger gap */
+.form-inline {
+    padding-top: 5px;  /* Adjust this value to make the gap larger */
+}
+
+/* Optionally, you can add some more styling for uniformity */
+.input-group {
+    width: 100%; /* Make the search input take full width if needed */
+}
+
+.bio{
+    width: 550%;
 }

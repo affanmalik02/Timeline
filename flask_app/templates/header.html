@@ -1,39 +1,51 @@
 {% extends "base.html" %}
+
 {% block header %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-	<a class="navbar-brand" href="{{ url_for('movies.index') }}">Timeline</a>
+	<a class="navbar-brand" href="{{ url_for('posts.timeline') }}">Timeline</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-		aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	</button>
 
 	<div class="collapse navbar-collapse" id="navbarCollapse">
 		<ul class="navbar-nav ml-auto">
-			<div class="nav-item">
+			<!-- Search Form -->
+			<li class="nav-item">
 				<form action="/" class="form-inline my-2 my-lg-0" method="POST">
 					{{ search_form.csrf_token }}
-					{{ search_form.search_query(class="form-control", placeholder="Find users") }}
-					
+					<div class="input-group">
+						<!-- Search input with squared corners -->
+						{{ search_form.search_query(class="form-control", placeholder="Find users") }}
+						<div class="input-group-append">
+							<!-- Search button with squared corners -->
+							{{ search_form.submit(class="btn btn-outline-success") }}
+						</div>
+					</div>
+			
+					<!-- Display form errors -->
 					{% if search_form.search_query.errors %}
-					<div class="alert alert-warning" role="alert">
+					<div class="alert alert-warning mt-2" role="alert">
 						{% for error in search_form.search_query.errors %}
-						<span>{{ error }}</span>
+							<span>{{ error }}</span>
 						{% endfor %}
 					</div>
 					{% endif %}
-		
-					{{ search_form.submit(class="btn btn-outline-success") }}
 				</form>
-			</div>
+			</li>
+			
 
+			<!-- User Authentication Links -->
 			{% if current_user.is_authenticated %}
 			<li class="nav-item">
-				<a class="nav-link" href="{{url_for('movies.user_detail', username=current_user.username)}}">
+				<a class="nav-link {% if request.endpoint == 'posts.user_detail' %}active{% endif %}" 
+				   href="{{ url_for('posts.user_detail', username=current_user.username) }}">
 					Profile
 				</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="{{ url_for('users.account') }}">
+				<a class="nav-link {% if request.endpoint == 'users.account' %}active{% endif %}" 
+				   href="{{ url_for('users.account') }}">
 					Settings
 				</a>
 			</li>
@@ -44,13 +56,15 @@
 			</li>
 			{% else %}
 			<li class="nav-item">
-				<a class="nav-link" href="{{ url_for('users.login') }}">
+				<a class="nav-link {% if request.endpoint == 'users.login' %}active{% endif %}" 
+				   href="{{ url_for('users.login') }}">
 					Login
 				</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="{{ url_for('users.register') }}">
-					Register
+				<a class="nav-link {% if request.endpoint == 'users.register' %}active{% endif %}" 
+				   href="{{ url_for('users.register') }}">
+					Sign Up
 				</a>
 			</li>
 			{% endif %}
@@ -58,8 +72,7 @@
 	</div>
 </nav>
 
-
-<div class="container">
+<div class="container mt-4">
 	{% block content %}{% endblock %}
 </div>
 {% endblock %}

@@ -4,12 +4,13 @@ import base64
 from io import BytesIO
 from .. import bcrypt
 from werkzeug.utils import secure_filename
-from ..forms import RegistrationForm, LoginForm, UpdateUsernameForm, UpdateProfileForm, UpdateProfilePicForm, SearchForm
+from ..forms import RegistrationForm, LoginForm, UpdateUsernameForm, UpdateProfileForm, UpdateProfilePicForm, SearchForm    
 from ..models import User
 import base64,io
 from ..utils import current_time
 
 from flask import Flask
+from datetime import datetime
 from flask_mail import Mail, Message
 
 app = Flask(__name__)
@@ -45,13 +46,15 @@ def context_processor():
 @users.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('movies.index'))
+        return redirect(url_for('posts.timeline'))
 
     form = RegistrationForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-            user = User(username=form.username.data, email=form.email.data, password=hashed_password, joined_date=current_time())
+
+            user = User(username=form.username.data, email=form.email.data, password=hashed_password, joined_date=datetime.now())
+
             user.save()
             
             if mail_enabled:
@@ -67,7 +70,7 @@ def register():
 @users.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('movies.index'))
+        return redirect(url_for('posts.timeline'))
     
     form = LoginForm()
     if request.method == 'POST':
@@ -75,7 +78,7 @@ def login():
             user = User.objects(username=form.username.data).first()
             if user and bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return redirect(url_for('movies.index', username=user.username))
+                return redirect(url_for('posts.timeline', username=user.username))
             else:
                 flash('Invalid username or password ', 'failure')
     return render_template("login.html", form=form)
@@ -86,7 +89,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('movies.index'))
+    return redirect(url_for('posts.timeline'))
 
 @users.route("/account", methods=["GET", "POST"])
 @login_required
@@ -110,12 +113,14 @@ def account():
                 current_user.modify(bio=update_profile_form.bio.data)
             if update_profile_form.location.data:
                 current_user.modify(location=update_profile_form.location.data)
+            if update_profile_form.birthday.data:
+                current_user.modify(birthday=update_profile_form.birthday.data)
+            
             current_user.save()
 
             return redirect(url_for('users.account'))
 
         if update_profile_pic_form.submit_picture.data and update_profile_pic_form.validate():
-            # TODO: handle update profile pic form submit
             image = update_profile_pic_form.picture.data
             filename = secure_filename(image.filename)
             content_type = f'images/{filename[-3:]}'
@@ -134,7 +139,7 @@ def account():
     if current_user.profile_pic != None:
         img = get_b64_img(current_user.username)
 
-    url = url_for('movies.user_detail', username=current_user.username, image=img)
+    url = url_for('posts.user_detail', username=current_user.username, image=img)
 
     user = User.objects(username=current_user.username).first()
     img = get_b64_img(user.username)

@@ -6,12 +6,9 @@
     <div class="row">
         <div class="col-md-12">
 
-        <h2> Registration <small class="float-right"></small></h2>
+        <h2> Join the Timeline <small class="float-right"></small></h2>
         <ul class="media-list">
         </ul>
-
-        {# Ask the user to login if they already have an account #}
-        If you already have an account, <a href="{{ url_for('users.login') }}">login</a>
 
         <!-- Registration Form: -->
 
@@ -66,6 +63,9 @@
             </div>
             {{ form.submit() }}
         </form>
+
+        {# Ask the user to login if they already have an account #}
+        Have an account? <a href="{{ url_for('users.login') }}">Login</a>
     </div>
 </div>
 
