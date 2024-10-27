@@ -2,7 +2,8 @@
 
 <https://timeline.aspear.cs.umd.edu/>
 
-![alt text](image.png)
+![alt text](liveprofile.png)
+![alt text](live1.png)
 
 ## Description
 
@@ -48,7 +49,6 @@ template files:
 3. `register()`
 4. `user_detail(username)`
 5. `logout()`
-6. `movie_detail()`
 7. `custom_404()`
 
 ### forms.py
@@ -57,7 +57,7 @@ template files:
 2. `LoginForm`:
 
 3. `SearchForm`:
-4. `MovieReviewForm`:
+4. `PostsForm`:
 5. `LikePostForm`:
 6. `DeletePostForm`:
 
@@ -77,7 +77,8 @@ template files:
    - `name`: optional
    - `bio`: optional
    - `location`: optional
-2. `Review` - Should have these fields:
+   - `birthday`: optional
+2. `Post` - Should have these fields:
    - `commenter`: required reference to a `User`
    - `content`: required with minimum length 5 and maximum length 500 characters.
    - `date`: required (can be saved as a string instead of a datetime)
