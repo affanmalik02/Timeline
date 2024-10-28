@@ -65,8 +65,6 @@ def register():
             return redirect(url_for('users.login'))
     return render_template('register.html', form=form)
 
-# DONE
-# TODO: implement
 @users.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
@@ -154,3 +152,53 @@ def account():
         reviews_url=url,
         image=img
     )
+
+@users.route('/follow/<username>', methods=['POST'])
+@login_required
+def follow(username):
+    user = User.objects(username=username).first()
+    if not user:
+        flash("User not found.")
+        return redirect(url_for('main.index'))
+    
+    if user != current_user:
+        current_user.follow(user)
+        flash(f"You are now following {user.username}.")
+    else:
+        flash("You cannot follow yourself.")
+
+    return redirect(url_for('posts.user_detail', username=username))
+
+@users.route('/unfollow/<username>', methods=['POST'])
+@login_required
+def unfollow(username):
+    user = User.objects(username=username).first()
+    if not user:
+        flash("User not found.")
+        return redirect(url_for('main.index'))
+
+    if user != current_user:
+        current_user.unfollow(user)
+        flash(f"You have unfollowed {user.username}.")
+    else:
+        flash("You cannot unfollow yourself.")
+    
+    return redirect(url_for('posts.user_detail', username=username))
+
+@users.route('/<username>/followers')
+def followers(username):
+    user = User.objects(username=username).first()
+    if not user:
+        flash("User not found.")
+        return redirect(url_for('main.index'))
+
+    return render_template('followers.html', user=user, followers=user.followers, get_b64_img=get_b64_img)
+
+@users.route('/<username>/following')
+def following(username):
+    user = User.objects(username=username).first()
+    if not user:
+        flash("User not found.")
+        return redirect(url_for('main.index'))
+
+    return render_template('following.html', user=user, following=user.following, get_b64_img=get_b64_img)

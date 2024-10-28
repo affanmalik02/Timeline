@@ -18,7 +18,7 @@ movie {
 
 .profile {
     line-height: .70;
-    margin-top: 15;
+    margin-bottom: 30px;
 }
 
 .media-body {
@@ -56,12 +56,9 @@ movie {
 
 .profile-container {
     display: flex;
-    align-items: center;
 }
 
 .profile-pic {
-    padding-top: 50px;
-    padding-bottom: 25px;
     flex: 0 0 auto; /* This ensures that the picture does not stretch */
     padding-right: 10px; /* Adjust as needed */
 }
@@ -73,6 +70,11 @@ movie {
 .propic {
     width: 150px;
     height: 150px;
+}
+
+.searchpic {
+    width: 50px;
+    height: 50px;
 }
 
 .feedpropic {

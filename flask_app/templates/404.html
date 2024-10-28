@@ -1,8 +1,27 @@
+{% extends "base.html" %}
 
-{% block content %}
-<div class="container">
-	<h>404 Error. Page Not Found</h>
-	<br><br>
-	<a href="{{ url_for('posts.timeline') }}">Return to the homepage</a>
+{% block header %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<a class="navbar-brand" href="{{ url_for('posts.timeline') }}">Timeline</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+		aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="navbarCollapse">
+		<ul class="navbar-nav ml-auto">
+			<!-- Search Form -->
+			<li class="nav-item">
+		</ul>
+	</div>
+</nav>
+
+<div class="container" style="margin-top: 25px;"> <!-- Added margin-top here -->
+	<div class="row">
+		<div class="col-md-12">
+			<h2>404 Error</h2>
+		</div>
+	</div>
+	<a href="{{ url_for('posts.timeline') }}">Return to the timeline</a>
 </div>
 {% endblock %}

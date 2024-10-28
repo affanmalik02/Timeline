@@ -8,46 +8,24 @@
     <div class="Top">
         <div class="row">
             <div class="col-md-12">
-            <h2> Users <small class="float-right"></small></h2>
+                <h2> Users <small class="float-right"></small></h2>
+            </div>
         </div>
     </div>
+    
+    
     <ul class="media-list">
         {% for user in results %}
 
-            <li class="media post-item">
-
-                <div class="profile-container">
-                    <div class="profile-pic">
-                        <img class="propic" src="data:image/png;base64,{{get_b64_img(user.username)}}" alt="image">
-                    </div>
-                    
-                    <div class="col-md-8 profile-col">
-                        <div class="profile">
-                            
-                            <h4>{{ user.name }}</h4>
-                            <a href="{{ url_for('posts.user_detail', username=user.username) }}" style="text-decoration: none;">
-                                <p style="margin-bottom: 25px;">
-                                    <strong>@{{ user.username }}</strong>
-                                </p>
-                            </a>
-                            
-                            {% if user.bio %}
-                                <p style="margin-bottom: 25px">{{ user.bio }}</p>
-                            {% endif %}
-                            
-                            {% if user.location %}
-                                <small>{{ user.location }}</small>
-                            {% endif %}
+        <li class="media post-item">
+            <img class="searchpic" src="data:image/png;base64,{{get_b64_img(user.username)}}" alt="image">
+        <div class="media-body">
+            <span style="font-weight: bold; margin-top: 0;">{{ user.name }}</span><br>
+            <a href="{{ url_for('posts.user_detail', username=user.username) }}" style="margin-top: 0; display: inline-block;">
+                <strong>@{{ user.username }}</strong>
+            </a>
+        </div>
             
-                            <br><br>
-                            
-                            {% if user.joined_date %}
-                                <small>Joined: {{ user.joined_date.strftime('%B %-d, %Y') }}</small>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </li>
         {% endfor %}
     </ul>
 {% endblock %}

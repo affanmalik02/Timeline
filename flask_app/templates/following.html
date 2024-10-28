@@ -1,0 +1,25 @@
+{% extends "header.html" %}
+{% block content %}
+
+<div class="top">
+    <div class="row">
+        <div class="col-md-12">
+        <h2> Following </h2>
+        <ul class="media-list">
+            {% for follow in following | reverse %}
+                <li class="media post-item">
+                    <img class="searchpic" src="data:image/png;base64,{{get_b64_img(follow.username)}}" alt="image">
+                <div class="media-body">
+                    <span style="font-weight: bold; ">{{ follow.name }}</span><br>
+                    <a href="{{ url_for('posts.user_detail', username=follow.username) }}">
+                        <strong>@{{ follow.username }}</strong>
+                    </a>    
+                </div>
+                </li>
+            {% endfor %}
+        </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

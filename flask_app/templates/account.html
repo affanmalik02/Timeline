@@ -1,6 +1,7 @@
 {% extends "header.html" %}
 {% block content %}
 
+<div class="top">
 <div class="profile-container">
     <div class="profile-pic">
         <!-- User's Profile Picture -->
@@ -9,30 +10,82 @@
     <div class="col-md-8 profile-col">
         {% block profile %}
             <div class="profile">
-                <h4>{{ user.name }}</h4>
-                <p style="margin-bottom: 25px">@{{ user.username }}</p>
-                
+                <div class="d-flex align-items-center">
+                    <!-- User name -->
+                    <h4 style="margin-right: 10px;">{{ user.name }}</h4> 
+                    
+                    <!-- Follow/Unfollow Button -->
+                    <!-- Follow/Unfollow Button -->
+                    {% if current_user.is_authenticated and current_user != user %}
+                    <div>
+                        {% if current_user.is_following(user) %}
+                            <form action="{{ url_for('users.unfollow', username=user.username) }}" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-secondary btn-sm" style="width: 70px; height: auto; font-size: 12px; border-radius: 5px; margin-top: -5px;">
+                                    Unfollow
+                                </button>
+                            </form>
+                        {% else %}
+                            <form action="{{ url_for('users.follow', username=user.username) }}" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-primary btn-sm" style="width: 70px; height: auto; font-size: 12px; border-radius: 5px; margin-top: -5px;">
+                                    Follow
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                </div>
+
+                <a href="{{ url_for('posts.user_detail', username=user.username) }}" style="text-decoration: none;">
+                    <p style="margin-bottom: 25px;">
+                        <strong>@{{ user.username }}</strong>
+                    </p>
+                </a>
+
                 {% if user.bio %}
-                    <p style="margin-bottom: 25px">{{ user.bio }}</p>
+                    <small style="margin-bottom: 25px">{{ user.bio }}</small>
+                    <br><br>
+                {% else %}
+                    <br><br>
                 {% endif %}
 
                 {% if user.location %}
-                    <small>{{ user.location }}</small>
+                    <small>From: {{ user.location }}</small>
+                    <br><br>
+                {% else %}
+                    <br><br>
                 {% endif %}
 
-                <br><br>
-
                 {% if user.birthday %}
-                    <small>Since: {{ user.birthday.strftime('%B %-d, %Y') }}</small>
+                    <small>Born: {{ user.birthday.strftime('%B %-d, %Y') }}</small>
+                    <br><br>
+                {% else %}
+                    <br><br>
                 {% endif %}
                 
                 {% if user.joined_date %}
-                    
                 {% endif %}
-                
+
+                <small>
+                    {{ user.followers|length }} 
+                    <a href="{{ url_for('users.followers', username=user.username) }}" style="text-decoration: none; color: inherit;">
+                        Followers
+                    </a>
+                </small>
+
+                <small>
+                    {{ user.following|length }} 
+                    <a href="{{ url_for('users.following', username=user.username) }}" style="text-decoration: none; color: inherit;">
+                        Following
+                    </a>
+                </small>
+
+
+                <br></br>
             </div>
         {% endblock %}
     </div>
+</div>
 </div>
 
 <div class="row">

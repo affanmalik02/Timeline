@@ -35,9 +35,32 @@ class User(db.Document, UserMixin):
     location = db.StringField(min_length=5, max_length=50)
     birthday = DateField()
 
+    followers = db.ListField(db.ReferenceField('User'))
+    following = db.ListField(db.ReferenceField('User'))
+
     # Returns unique string identifying our object
     def get_id(self):
         return self.username
+    
+    def follow(self, user):
+        if user not in self.following:
+            self.following.append(user)
+            user.followers.append(self)
+            self.save()
+            user.save()
+
+    def unfollow(self, user):
+        if user in self.following:
+            self.following.remove(user)
+            user.followers.remove(self)
+            self.save()
+            user.save()
+
+    def is_following(self, user):
+        return user in self.following
+
+    def is_followed_by(self, user):
+        return user in self.followers
 
 class Post(db.Document):
     commenter = db.ReferenceField(User, required=True)
