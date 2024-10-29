@@ -2,11 +2,11 @@
 
 <https://timeline.aspear.cs.umd.edu/>
 
-![alt text](liveprofile.png)
-![alt text](live1.png)
-![alt text](live2.png)
-![alt text](live3.png)
-![alt text](live4.png)
+![alt text](images/liveprofile.png)
+![alt text](images/live1.png)
+![alt text](images/live2.png)
+![alt text](images/live3.png)
+![alt text](images/live4.png)
 
 ## Description
 
